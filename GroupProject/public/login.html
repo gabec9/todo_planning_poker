@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Planning Poker - Login</title></head>
+<body>
+  <h1>Planning Poker</h1>
+
+  <h2>Join a project</h2>
+  <input id="user" placeholder="Your name">
+  <input id="project" placeholder="Project name">
+  <button onclick="join()">Enter</button>
+
+  <h2>Or create one</h2>
+  <input id="newProject" placeholder="New project name">
+  <button onclick="create()">Create</button>
+
+  <p id="msg"></p>
+
+  <script src="api.js"></script>
+  <script>
+    // Landing here always starts a fresh login
+    sessionStorage.clear();
+
+    async function join() {
+      try {
+        const user = document.getElementById("user").value.trim();
+        const r = await api("/api/login", "POST", { user, project: document.getElementById("project").value });
+        sessionStorage.setItem("project", r.project);
+        sessionStorage.setItem("user", user || "anonymous");
+        location.href = "board.html";
+      } catch (e) { msg.textContent = e.message; }
+    }
+    async function create() {
+      try {
+        await api("/api/projects", "POST", { name: document.getElementById("newProject").value });
+        msg.textContent = "Created! Now join it above.";
+        // TODO: auto-login after creation
+      } catch (e) { msg.textContent = e.message; }
+    }
+  </script>
+</body>
+</html>

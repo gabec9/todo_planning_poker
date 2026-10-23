@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Board</title></head>
+<body>
+  <h1 id="title"></h1>
+
+  <!-- TODO: PRESENCE BAR - row at the very top listing everyone currently at the board
+       (name chips, highlight "you"). Fill from the online-users list returned by the server.
+       <div id="presence"></div> -->
+  <p>Signed in as <b id="who"></b> | <a href="login.html" onclick="sessionStorage.clear()">Log out</a></p>
+
+  <!-- Add task -->
+  <input id="taskText" placeholder="New task">
+  <input id="taskNote" placeholder="Task note">
+  <!-- TODO: add inputs for user stories (textarea) and initial effort when creating a task -->
+  <button onclick="addTask()">Add</button>
+
+  <!-- Filter: all tasks / unassigned / assigned -->
+  <p>
+    View:
+    <select id="filter" onchange="render()">
+      <option value="all">Everyone's tasks</option>
+      <option value="unassigned">Unassigned</option>
+      <option value="assigned">Assigned</option>
+      <option value="mine">Mine</option>
+    </select>
+  </p>
+
+  <!-- TODO: COMPLETED BAR - collapsible strip/section for tasks with status "done" (title, assignee, effort, completedAt),
+       with a "Reopen" button on each. Tasks that are done should disappear from the main list below.
+       <div id="completed"></div> -->
+
+  <ul id="tasks"></ul>
+
+  <!-- TODO: TASK DETAIL PANEL - clicking a task opens this (modal or side panel) showing:
+       task text, note, USER STORIES (editable textarea + save), assignee, effort, Done/Reopen button.
+       <div id="detail" hidden></div> -->
+
+  <!-- TODO: EFFORT TABLE - shown only when filter === "all" ("Everyone's tasks").
+       Columns: Person | # tasks | Total effort | Done effort. One row per person plus "Unassigned", and a totals row.
+       <table id="effortTable"></table> -->
+
+  <h2>Group notes</h2>
+  <textarea id="note" rows="8" cols="60"></textarea><br>
+  <button onclick="saveNote()">Save notes</button>
+  <!-- TODO: file upload input + list of uploaded notes -->
+
+  <script src="api.js"></script>
+  <script>
+    let project = null;
+    const me = sessionStorage.getItem("user");
+    if (!sessionStorage.getItem("project")) location.href = "login.html";
+    who.textContent = me;
+
+    async function load() {
+      project = await api("/api/project");
+      title.textContent = project.name;
+      note.value = project.note;
+      render();
+    }
+
+    function render() {
+      const f = filter.value;
+      const shown = project.tasks.filter(t =>
+        f === "all" ? true :
+        f === "unassigned" ? !t.assignee :
+        f === "assigned" ? !!t.assignee :
+        t.assignee === me);
+
+      tasks.innerHTML = "";
+      for (const t of shown) {
+        const li = document.createElement("li");
+        li.innerHTML = `<b>${esc(t.task)}</b> - ${esc(t.note)}
+          [${t.assignee ? "assigned to " + esc(t.assignee) : "unassigned"}]`;
+        // Claim / release
+        const btn = document.createElement("button");
+        btn.textContent = t.assignee === me ? "Release" : "Take";
+        btn.onclick = () => update(t.id, { assignee: t.assignee === me ? null : me });
+        li.append(" ", btn);
+        // TODO: make the task title clickable -> openDetail(t.id) to show user stories
+        // TODO: EFFORT control - <select>/input next to each task (Fibonacci options) -> update(t.id, { effort })
+        // TODO: DONE button next to Take/Release -> update(t.id, { status: "done" }); hide/disable if effort or assignee missing?
+        // TODO: skip tasks with status "done" here and render them into the completed bar instead
+        // TODO: edit task text/note inline, delete button, poker estimate/vote UI
+        tasks.append(li);
+      }
+    }
+
+    // TODO: function renderPresence()  - fill #presence from the online users list
+    // TODO: function renderCompleted() - fill #completed from tasks where status === "done"
+    // TODO: function openDetail(id)    - show #detail with user stories; save via update(id, { userStories })
+    // TODO: function renderEffortTable() - group tasks by assignee, sum effort, fill #effortTable (only when filter === "all")
+    // TODO: call the four renderers above from render()
+    // TODO: heartbeat - setInterval(() => api("/api/presence", "POST"), 10000) and refresh the online list when load() runs
+
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+    async function addTask() {
+      await api("/api/tasks", "POST", { task: taskText.value, note: taskNote.value });
+      taskText.value = taskNote.value = "";
+      load();
+    }
+    async function update(id, fields) { await api("/api/tasks/" + id, "PATCH", fields); load(); }
+    async function saveNote() { await api("/api/project/note", "PUT", { note: note.value }); }
+
+    load();
+    // TODO: setInterval(load, 5000) or SSE so everyone's view stays in sync
+  </script>
+</body>
+</html>

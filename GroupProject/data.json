@@ -1,0 +1,192 @@
+{
+  "projects": {
+    "cs555 group project": {
+      "name": "CS555 Group Project",
+      "note": "Sprint 1 kickoff notes\n- Standup Tuesdays and Thursdays, 4pm\n- Backend: Express + JSON file for now\n- Demo date: Dec 5. Slides due Dec 3.\n- Everyone claims at least 2 tasks before Friday.",
+      "tasks": [
+        {
+          "id": "cs01",
+          "task": "Design login page",
+          "note": "Project name only, case-insensitive. No passwords yet.",
+          "assignee": "Jared",
+          "effort": 3,
+          "userStories": "As a team member, I can log in with just a project name so I can reach the board quickly.",
+          "status": "done",
+          "completedAt": "2026-10-20T15:12:00Z"
+        },
+        {
+          "id": "cs02",
+          "task": "Build shared board view",
+          "note": "Filter by assigned/unassigned/mine.",
+          "assignee": "Maya",
+          "effort": 5,
+          "userStories": "As a team member, I can see everyone's tasks and filter by assigned/unassigned so I know what's open.",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "cs03",
+          "task": "Group notes upload",
+          "note": "Start with textarea, then add file upload via multer.",
+          "assignee": null,
+          "effort": 5,
+          "userStories": "As a team member, I can upload and read group notes so the whole team shares the same context.",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "cs04",
+          "task": "Planning poker voting round",
+          "note": "Fibonacci cards: 1, 2, 3, 5, 8, 13. Reveal and reset buttons.",
+          "assignee": null,
+          "effort": 8,
+          "userStories": "As a participant, I can pick an effort card privately and reveal all cards together so estimates aren't biased.",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "cs05",
+          "task": "Write README and setup guide",
+          "note": "",
+          "assignee": "Jordan",
+          "effort": 2,
+          "userStories": "As a new teammate, I can follow the README to run the app locally in under five minutes.",
+          "status": "done",
+          "completedAt": "2026-10-21T18:40:00Z"
+        },
+        {
+          "id": "cs06",
+          "task": "Fix task update race condition",
+          "note": "Two people editing at once: last write wins right now.",
+          "assignee": null,
+          "effort": null,
+          "userStories": "As a user, my task edits are not silently overwritten when someone else edits at the same time.",
+          "status": "todo",
+          "completedAt": null
+        }
+      ],
+      "users": {
+        "Jared": {
+          "lastSeen": "2026-10-23T04:00:00Z"
+        },
+        "Maya": {
+          "lastSeen": "2026-10-23T03:45:00Z"
+        },
+        "Jordan": {
+          "lastSeen": "2026-10-22T22:10:00Z"
+        }
+      }
+    },
+    "apollo": {
+      "name": "Apollo",
+      "note": "Mobile app redesign.\nDesign review is Friday. Keep the onboarding flow under 4 screens.",
+      "tasks": [
+        {
+          "id": "ap01",
+          "task": "Audit current onboarding screens",
+          "note": "Screenshot every step and count taps.",
+          "assignee": "Rich",
+          "effort": 3,
+          "userStories": "As a designer, I have screenshots of every onboarding step so we can count taps.",
+          "status": "done",
+          "completedAt": "2026-10-19T14:05:00Z"
+        },
+        {
+          "id": "ap02",
+          "task": "Draft new color palette",
+          "note": "Must pass WCAG AA contrast.",
+          "assignee": "Rich",
+          "effort": 2,
+          "userStories": "As a user with low vision, I can read all text because the palette passes WCAG AA contrast.",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "ap03",
+          "task": "Prototype settings page",
+          "note": "Figma, low-fidelity is fine.",
+          "assignee": "Sam",
+          "effort": 5,
+          "userStories": "As a user, I can find and change my notification settings in two taps.",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "ap04",
+          "task": "User interview script",
+          "note": "10 questions max, 20 minute sessions.",
+          "assignee": null,
+          "effort": null,
+          "userStories": "As a researcher, I have a short script so every interview covers the same questions.",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "ap05",
+          "task": "Schedule 5 user interviews",
+          "note": "Use the sign-up sheet from last quarter.",
+          "assignee": null,
+          "effort": 1,
+          "userStories": "As a researcher, I have five interviews booked so we get feedback before the design review.",
+          "status": "todo",
+          "completedAt": null
+        }
+      ],
+      "users": {
+        "Rich": {
+          "lastSeen": "2026-10-22T20:00:00Z"
+        },
+        "Sam": {
+          "lastSeen": "2026-10-22T19:30:00Z"
+        }
+      }
+    },
+    "lunch club": {
+      "name": "Lunch Club",
+      "note": "Silly low-stakes project for testing.\nVote on Friday lunch spots, rotate who picks.",
+      "tasks": [
+        {
+          "id": "lc01",
+          "task": "Collect restaurant suggestions",
+          "note": "Dietary needs: 1 vegetarian, 1 gluten-free.",
+          "assignee": "Sam",
+          "effort": 1,
+          "userStories": "As a club member, I can suggest a restaurant and note my dietary needs.",
+          "status": "done",
+          "completedAt": "2026-10-22T12:30:00Z"
+        },
+        {
+          "id": "lc02",
+          "task": "Make reservation for 6",
+          "note": "",
+          "assignee": null,
+          "effort": 2,
+          "userStories": "As the organizer, I have a reservation for 6 so we are not turned away.",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "lc03",
+          "task": "Split the bill spreadsheet",
+          "note": "Venmo handles in the pinned message.",
+          "assignee": null,
+          "effort": null,
+          "userStories": "As a club member, I can see what I owe after lunch without doing math.",
+          "status": "todo",
+          "completedAt": null
+        }
+      ],
+      "users": {
+        "Sam": {
+          "lastSeen": "2026-10-22T12:35:00Z"
+        }
+      }
+    },
+    "empty sandbox": {
+      "name": "Empty Sandbox",
+      "note": "",
+      "tasks": [],
+      "users": {}
+    }
+  }
+}
