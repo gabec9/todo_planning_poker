@@ -5,3 +5,5 @@ Categorize	User	Add a tag to an item	I can organize what type of task			sort by 
 Play Planning Poker	User	Press start game	I can plan out effort and priority			
 Share	User	Share my board	I can share/delegates tasks			
 View Shared Board	Invited User	View a shared board	I can add and contribute to their work			
+
+bigger edit
