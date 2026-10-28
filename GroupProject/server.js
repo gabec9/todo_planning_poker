@@ -85,7 +85,17 @@ app.patch("/api/tasks/:id", requireProject, (req, res) => {
   res.json(task);
 });
 
-// TODO: DELETE /api/tasks/:id
+// delete function
+app.delete("/api/tasks/:id", requireProject, (req, res) => {
+  const data = db.read();
+  const tasks = data.projects[req.projectKey].tasks;
+  const i = tasks.findIndex(t => t.id === req req.params.id);
+  if (i == -1) return res.status(404).json({ error: "Task not found" });
+
+  const [removed] = tasks.splice(i, 1);
+  db.write(data);
+  res.json({ ok: true, id: removed.id });
+});
 
 // ---- Presence: who is at the board ----
 // TODO: POST /api/presence  -> set project.users[req.user].lastSeen = now (client calls this every ~10s)
