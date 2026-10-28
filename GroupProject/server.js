@@ -4,6 +4,14 @@ const path = require("path");
 const db = require("./db");
 
 const app = express();
+const fib = [1, 2, 3, 5, 8, 13];
+// Return null, a valid Fibonacci number, or undefined
+function parseEffort(v) {
+  if (v === null || v === undefined || v === "") return null;
+  const n = Number(v);
+  return fib.includes(n) ? n : undefined;
+}
+
 app.use(express.json());
 // Launching the app (/) always lands on the login page
 app.get("/", (req, res) => res.redirect("/login.html"));
