@@ -1,0 +1,7 @@
+Title	As a	I can	So that	Priority	Story Points	Description
+Board View	User	Log in to my account	I can view my boards			
+Add Item	User	Add an agenda item	I can keep track of items in a table			
+Categorize	User	Add a tag to an item	I can organize what type of task			sort by like hw, chore, work, and stuff
+Play Planning Poker	User	Press start game	I can plan out effort and priority			
+Share	User	Share my board	I can share/delegates tasks			
+View Shared Board	Invited User	View a shared board	I can add and contribute to their work			
