@@ -4,7 +4,7 @@ const path = require("path");
 const db = require("./db");
 
 const app = express();
-const fib = [1, 2, 3, 5, 8, 13, 21, 34, 55];
+const fib = [0, 1, 2, 3, 5, 8, 13, 21, 40, 100];
 // Return null, a valid Fibonacci number, or undefined
 function parseEffort(v) {
   if (v === null || v === undefined || v === "") return null;
