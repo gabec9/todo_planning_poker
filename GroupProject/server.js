@@ -112,30 +112,7 @@ app.post("/api/presence", requireProject, (req, res) => {
   res.json({ ok: true, lastSeen });
 });
 
-// GET  /api/project   -> also return the list of users whose lastSeen is within the last ~30s ("online")
-const ONLINE_WINDOW_MS = 30 * 1000;
-
-app.get("/api/project", requireProject, (req, res) => {
-  const project = db.read().projects[req.projectKey];
-  const now = Date.now();
-
-  // Who is online: lastSeen within the window, plus the requester (see note below)
-  const online = Object.entries(project.users || {})
-    .filter(([, u]) => now - Date.parse(u.lastSeen) < ONLINE_WINDOW_MS)
-    .map(([name]) => name);
-  if (req.user && !online.includes(req.user)) online.push(req.user);
-
-  // Hide votes until revealed: send who has voted, and the requester's own card
-  const tasks = project.tasks.map(({ votes = {}, revealed = false, ...t }) => ({
-    ...t,
-    revealed,
-    votedBy: Object.keys(votes),
-    myVote: votes[req.user] ?? null,
-    ...(revealed ? { votes } : {}),
-  }));
-
-  res.json({ ...project, tasks, online });
-});
+// TODO: GET  /api/project   -> also return the list of users whose lastSeen is within the last ~30s ("online")
 
 // TODO: decide if users who were ever seen (but offline) should still appear greyed out
 
