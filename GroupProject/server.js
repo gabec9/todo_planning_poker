@@ -98,7 +98,19 @@ app.delete("/api/tasks/:id", requireProject, (req, res) => {
 });
 
 // ---- Presence: who is at the board ----
-// TODO: POST /api/presence  -> set project.users[req.user].lastSeen = now (client calls this every ~10s)
+// POST /api/presence  -> set project.users[req.user].lastSeen = now (client calls this every ~10s)
+app.post("/api/presence", requireProject, (req, res) => {
+  if (!req.user || req.user === "__proto__") {
+    return res.status(400).json({ error: "User name required" });
+  }
+  const data = db.read();
+  const project = data.projects[req.projectKey];
+  project.users ??= {};                       // projects made via POST /api/projects have no users yet
+  const lastSeen = new Date().toISOString();
+  project.users[req.user] = { ...project.users[req.user], lastSeen };
+  db.write(data);
+  res.json({ ok: true, lastSeen });
+});
 // TODO: GET  /api/project   -> also return the list of users whose lastSeen is within the last ~30s ("online")
 // TODO: decide if users who were ever seen (but offline) should still appear greyed out
 
