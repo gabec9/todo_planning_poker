@@ -104,6 +104,8 @@
     async function saveNote() { await api("/api/project/note", "PUT", { note: note.value }); }
 
     load();
+    api("/api/presence", "POST").catch(() => {}); // announce immediately
+    setInterval(() => api("/api/presence", "POST").catch(() => {}), 10000);
     // TODO: setInterval(load, 5000) or SSE so everyone's view stays in sync
   </script>
 </body>
