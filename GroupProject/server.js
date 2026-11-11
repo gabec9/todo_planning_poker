@@ -111,7 +111,8 @@ app.post("/api/presence", requireProject, (req, res) => {
   db.write(data);
   res.json({ ok: true, lastSeen });
 });
-// TODO: GET  /api/project   -> also return the list of users whose lastSeen is within the last ~30s ("online")
+
+// GET  /api/project   -> also return the list of users whose lastSeen is within the last ~30s ("online")
 // TODO: decide if users who were ever seen (but offline) should still appear greyed out
 
 // ---- Effort summary ----
