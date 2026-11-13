@@ -161,7 +161,13 @@ app.get("/api/project/effort", requireProject, (req, res) => {
 });
 
 // ---- Completed tasks ----
-// TODO: GET /api/project/completed -> tasks with status "done", newest completedAt first (or just filter client-side)
+// GET /api/project/completed -> tasks with status "done", newest completedAt first (or just filter client-side)
+app.get("/api/project/completed", requireProject, (req, res) => {
+  const tasks = db.read().projects[req.projectKey].tasks
+    .filter(t => t.status === "done")
+    .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt)); // newest first
+  res.json(tasks);
+});
 
 // ---- Group notes ----
 app.put("/api/project/note", requireProject, (req, res) => {
