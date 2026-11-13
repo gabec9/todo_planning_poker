@@ -140,8 +140,25 @@ app.get("/api/project", requireProject, (req, res) => {
 // TODO: decide if users who were ever seen (but offline) should still appear greyed out
 
 // ---- Effort summary ----
-// TODO: GET /api/project/effort -> [{ user, totalEffort, taskCount, doneEffort }] summed over tasks by assignee
+// GET /api/project/effort -> [{ user, totalEffort, taskCount, doneEffort }] summed over tasks by assignee
 //       (skip tasks with effort === null; include an "Unassigned" row); client can also compute this itself from /api/project
+app.get("/api/project/effort", requireProject, (req, res) => {
+  const tasks = db.read().projects[req.projectKey].tasks;
+  const rows = {};   // key: assignee name or "Unassigned"
+
+  for (const t of tasks) {
+    if (t.effort == null) continue;                    // skip null/undefined effort
+    const user = t.assignee || "Unassigned";
+    const row = (rows[user] ??= { user, totalEffort: 0, taskCount: 0, doneEffort: 0 });
+    row.totalEffort += t.effort;
+    row.taskCount += 1;
+    if (t.status === "done") row.doneEffort += t.effort;
+  }
+
+  const list = Object.values(rows).sort((a, b) =>
+    a.user === "Unassigned" ? 1 : b.user === "Unassigned" ? -1 : a.user.localeCompare(b.user));
+  res.json(list);
+});
 
 // ---- Completed tasks ----
 // TODO: GET /api/project/completed -> tasks with status "done", newest completedAt first (or just filter client-side)
