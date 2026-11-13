@@ -13,8 +13,8 @@ function parseEffort(v) {
 }
 
 app.use(express.json());
-// Launching the app (/) always lands on the login page
-app.get("/", (req, res) => res.redirect("/login.html"));
+// Launching the app (/) lands on the home page
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.use(express.static(path.join(__dirname, "public"))); // absolute path: works from any cwd
 
 // "Auth": project name is the only gate. Client sends x-project and x-user headers.
@@ -176,7 +176,7 @@ const PORT = process.env.PORT || 3000;
 const PUBLIC = path.join(__dirname, "public");
 app.listen(PORT, () => {
   console.log(`Serving ${PUBLIC}`);
-  console.log(require("fs").existsSync(path.join(PUBLIC, "login.html")) ? "login.html found" : "WARNING: login.html NOT found in public/");
+  console.log(require("fs").existsSync(path.join(PUBLIC, "index.html")) ? "index.html found" : "WARNING: index.html NOT found in public/");
   console.log(`http://localhost:${PORT}`);
 }).on("error", (e) => {
   if (e.code === "EADDRINUSE") console.error(`Port ${PORT} is already in use (an old server may still be running). Stop it or run: PORT=3001 npm start`);
