@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deck Of Stories - Planning Poker</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #fff; }
+    .site-header {
+      max-width: 720px;
+      margin: 16px auto;
+      padding: 0 24px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1a2240;
+    }
+    .hero {
+      max-width: 720px;
+      margin: 0 auto 32px;
+      padding: 48px 24px;
+      text-align: center;
+      background: #f4f6fb;
+      border-radius: 12px;
+    }
+    .hero h1 { margin: 0 0 16px; font-size: 2.2rem; line-height: 1.2; color: #1a2240; }
+    .hero p { margin: 0; font-size: 1.1rem; line-height: 1.6; color: #3a4260; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 32px;
+    }
+    .btn {
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 2px solid #2f4bd1;
+      cursor: pointer;
+    }
+    .btn-primary { background: #2f4bd1; color: #fff; }
+    .btn-secondary { background: #fff; color: #2f4bd1; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <header class="site-header">Deck Of Stories - Planning Poker</header>
+
+  <section class="hero">
+    <h1>Estimate together, without the guesswork.</h1>
+    <p>
+      Deck Of Stories makes planning poker simple for agile teams, whether you’re in the same room
+      or spread across time zones. Create a room, share the link, and everyone votes on story points
+      at the same time, so no one’s estimate gets swayed by the loudest voice. Cards are revealed
+      together, which shows right away where the team agrees and where it needs to talk. You spend
+      less time arguing over numbers and more time building. No downloads and no setup, just faster
+      and fairer sprint planning.
+    </p>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="location.href='login.html'">Start game</button>
+      <button class="btn btn-secondary" id="resumeBtn" onclick="location.href='board.html'">Resume game</button>
+    </div>
+  </section>
+
+  <script>
+    // Resume only makes sense if this tab still has a session from a previous join
+    if (!sessionStorage.getItem("project")) {
+      const resume = document.getElementById("resumeBtn");
+      resume.disabled = true;
+      resume.title = "No game in progress";
+    }
+  </script>
+</body>
+</html>
