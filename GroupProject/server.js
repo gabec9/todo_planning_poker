@@ -75,16 +75,27 @@ app.get("/api/project", requireProject, (req, res) => {
 });
 
 app.post("/api/tasks", requireProject, (req, res) => {
+  const text = (req.body.task || "").trim();
+  if (!text) return res.status(400).json({ error: "Task text required" });
+
+  const effort = parseEffort(req.body.effort);
+  if (effort === undefined) {
+    return res.status(400).json({ error: `Effort must be one of ${fib.join(", ")}` });
+  }
+
   const data = db.read();
   const task = {
     id: Date.now().toString(36),
-    task: (req.body.task || "").trim(),
+    task: text,
     note: req.body.note || "",
-    assignee: null,        // null = unassigned
-    // TODO: effort: null, userStories: req.body.userStories || "", status: "todo", completedAt: null
-    // TODO: estimate / votes fields for the actual poker round
+    assignee: null,
+    effort,
+    userStories: String(req.body.userStories || ""),
+    status: "todo",
+    completedAt: null,
+    votes: {},
+    revealed: false,
   };
-  if (!task.task) return res.status(400).json({ error: "Task text required" });
   data.projects[req.projectKey].tasks.push(task);
   db.write(data);
   res.status(201).json(task);
