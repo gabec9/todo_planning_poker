@@ -105,12 +105,37 @@ app.patch("/api/tasks/:id", requireProject, (req, res) => {
   const data = db.read();
   const task = data.projects[req.projectKey].tasks.find(t => t.id === req.params.id);
   if (!task) return res.status(404).json({ error: "Task not found" });
-  // Whitelist updatable fields
-  // TODO: add "effort" (validate: null or positive number, ideally from the Fibonacci set) and "userStories" to this whitelist
+
   for (const f of ["task", "note", "assignee"]) if (f in req.body) task[f] = req.body[f];
-  // TODO: if req.body.status is "done" -> set task.status = "done", task.completedAt = new Date().toISOString()
-  //       if req.body.status is "todo" (reopen) -> task.status = "todo", task.completedAt = null
-  // TODO: decide whether a task must be assigned before it can be marked done
+  if ("userStories" in req.body) task.userStories = String(req.body.userStories);
+
+  if ("effort" in req.body) {
+    const effort = parseEffort(req.body.effort);
+    if (effort === undefined) {
+      return res.status(400).json({ error: `Effort must be one of ${fib.join(", ")}` });
+    }
+    task.effort = effort;
+  }
+
+  if ("status" in req.body) {
+    if (req.body.status === "done") {
+      if (task.status !== "done") {
+        task.status = "done";
+        task.completedAt = new Date().toISOString();
+      }
+    } else if (req.body.status === "todo") {
+      task.status = "todo";
+      task.completedAt = null;
+    } else {
+      return res.status(400).json({ error: 'Status must be "todo" or "done"' });
+    }
+  }
+
+  if (!String(task.task).trim()) return res.status(400).json({ error: "Task text required" });
+  if (task.status === "done" && !task.assignee) {
+    return res.status(400).json({ error: "Assign the task before marking it done" });
+  }
+
   db.write(data);
   res.json(task);
 });
