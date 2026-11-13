@@ -51,8 +51,27 @@ app.post("/api/projects", (req, res) => {
 // ---- Group board ----
 // Returns everything: all tasks (assigned + unassigned) and the project note.
 // Filtering assigned/unassigned happens client-side; TODO: move server-side if lists get big.
+// Returns the project, who is online, and tasks with votes hidden until revealed.
+const ONLINE_WINDOW_MS = 30 * 1000;
+
 app.get("/api/project", requireProject, (req, res) => {
-  res.json(db.read().projects[req.projectKey]);
+  const project = db.read().projects[req.projectKey];
+  const now = Date.now();
+
+  const online = Object.entries(project.users || {})
+    .filter(([, u]) => now - Date.parse(u.lastSeen) < ONLINE_WINDOW_MS)
+    .map(([name]) => name);
+  if (req.user && !online.includes(req.user)) online.push(req.user);
+
+  const tasks = project.tasks.map(({ votes = {}, revealed = false, ...t }) => ({
+    ...t,
+    revealed,
+    votedBy: Object.keys(votes),
+    myVote: votes[req.user] ?? null,
+    ...(revealed ? { votes } : {}),
+  }));
+
+  res.json({ ...project, tasks, online });
 });
 
 app.post("/api/tasks", requireProject, (req, res) => {
@@ -112,31 +131,6 @@ app.post("/api/presence", requireProject, (req, res) => {
   res.json({ ok: true, lastSeen });
 });
 
-// GET /api/project -> also return the list of users whose lastSeen is within the last ~30s ("online")
-const ONLINE_WINDOW_MS = 30 * 1000;
-
-app.get("/api/project", requireProject, (req, res) => {
-  const project = db.read().projects[req.projectKey];
-  const now = Date.now();
-
-  // Who is online: lastSeen within the window, plus the requester (see note below)
-  const online = Object.entries(project.users || {})
-    .filter(([, u]) => now - Date.parse(u.lastSeen) < ONLINE_WINDOW_MS)
-    .map(([name]) => name);
-  if (req.user && !online.includes(req.user)) online.push(req.user);
-
-  // Hide votes until revealed: send who has voted, and the requester's own card
-  const tasks = project.tasks.map(({ votes = {}, revealed = false, ...t }) => ({
-    ...t,
-    revealed,
-    votedBy: Object.keys(votes),
-    myVote: votes[req.user] ?? null,
-    ...(revealed ? { votes } : {}),
-  }));
-
-  res.json({ ...project, tasks, online });
-});
-
 // TODO: decide if users who were ever seen (but offline) should still appear greyed out
 
 // ---- Effort summary ----
@@ -161,7 +155,13 @@ app.get("/api/project/effort", requireProject, (req, res) => {
 });
 
 // ---- Completed tasks ----
-// TODO: GET /api/project/completed -> tasks with status "done", newest completedAt first (or just filter client-side)
+// GET /api/project/completed -> tasks with status "done", newest completedAt first (or just filter client-side)
+app.get("/api/project/completed", requireProject, (req, res) => {
+  const tasks = db.read().projects[req.projectKey].tasks
+    .filter(t => t.status === "done")
+    .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt)); // newest first
+  res.json(tasks);
+});
 
 // ---- Group notes ----
 app.put("/api/project/note", requireProject, (req, res) => {
