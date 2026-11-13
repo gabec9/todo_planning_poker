@@ -5,8 +5,8 @@
   <h1 id="title"></h1>
 
   <!-- TODO: PRESENCE BAR - row at the very top listing everyone currently at the board
-       (name chips, highlight "you"). Fill from the online-users list returned by the server.
-       <div id="presence"></div> -->
+       (name chips, highlight "you"). Fill from the online-users list returned by the server. -->
+  <div id="presence"></div>
   <p>Signed in as <b id="who"></b> | <a href="login.html" onclick="sessionStorage.clear()">Log out</a></p>
 
   <!-- Add task -->
@@ -60,6 +60,7 @@
     }
 
     function render() {
+      renderPresence();
       const f = filter.value;
       const shown = project.tasks.filter(t =>
         f === "all" ? true :
@@ -86,7 +87,12 @@
       }
     }
 
-    // TODO: function renderPresence()  - fill #presence from the online users list
+    // function renderPresence()  - fill #presence from the online users list
+    function renderPresence() {
+      presence.innerHTML = "Online: " + project.online
+      .map(n => `<span style="padding:2px 8px;border:1px solid #888;border-radius:12px;${n === me ? "font-weight:bold;background:#e8f0fe" : ""}">${esc(n)}${n === me ? " (you)" : ""}</span>`)
+      .join(" ");
+    }
     // TODO: function renderCompleted() - fill #completed from tasks where status === "done"
     // TODO: function openDetail(id)    - show #detail with user stories; save via update(id, { userStories })
     // TODO: function renderEffortTable() - group tasks by assignee, sum effort, fill #effortTable (only when filter === "all")
