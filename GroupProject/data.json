@@ -63,6 +63,18 @@
           "userStories": "As a user, my task edits are not silently overwritten when someone else edits at the same time.",
           "status": "todo",
           "completedAt": null
+        },
+        {
+          "id": "mwibyh7z",
+          "task": "Complete board.html TODOs: effort, done/completed bar, detail panel, effort table, sync",
+          "note": "Added effort dropdowns, Done/Delete buttons, completed bar with Reopen, task detail panel, effort table, and 5s auto-refresh. Code written with Claude's help.",
+          "assignee": "charlotte",
+          "effort": 8,
+          "userStories": "As a team member I can set an effort on each task so we can estimate work\nAs a team member I can mark a task done once it has an assignee and effort + see it in a completed bar where I can reopen it\nAs a team member I can click a task to view and edit its details + user stories\nAs a team member I can see a per person effort table so we know how work is split.\nAs a team member I automatically see changes from teammates without refreshing",
+          "status": "done",
+          "completedAt": "2026-11-15T21:12:52.364Z",
+          "votes": {},
+          "revealed": false
         }
       ],
       "users": {
@@ -74,6 +86,9 @@
         },
         "Jordan": {
           "lastSeen": "2026-10-22T22:10:00Z"
+        },
+        "charlotte": {
+          "lastSeen": "2026-11-15T21:24:09.781Z"
         }
       }
     },
