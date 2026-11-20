@@ -13,6 +13,8 @@
 //     } ]
 // } } }
 // Old data.json files still load: read() backfills any missing v2 fields.
+// TODO(API-1): v3 = project.session { status, currentTaskId, round, startedAt, version, coffee }, users[].joinedAt/joinSeq/clientId,
+//   optional task.history[]. Backfill them in read() below. Shape: docs/LOBBY_AND_GAME_FLOW.md
 const fs = require("fs");
 const FILE = require("path").join(__dirname, "data.json");
 

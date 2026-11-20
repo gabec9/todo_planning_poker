@@ -1,0 +1,12 @@
+<!doctype html>
+<!-- STUB - the planning poker game UI opened by the "Join vote" / "Revote" button. Not implemented.
+     See /TODO.md (VOTE-*) and design/FRAME_MAP.md (frames 04-07, 08, 11, 12). Accept ?task=<id>.
+     TODO(VOTE-6): "Pick your card!", Task Box, player table cards (white = not voted, dark = voted), "Complexity:" card row
+     TODO(VOTE-6): selected card dark + ▲ ; POST /api/tasks/:id/vote {card}
+     TODO(VOTE-7): results - distribution bars, Average, revealed cards (after reveal)
+     TODO(VOTE-8): "Revote?" confirm (host only) -> POST /api/room/revote
+     TODO(VOTE-9): accept result -> POST /api/room/accept {value}; next task or "Tasks Complete!" (frame 08)
+     TODO(VOTE-10): coffee break overlay (frames 11/12)
+     TODO(RT-1): own 1s refresh loop - do NOT reuse board.html's loop (it pauses while inputs are focused)
+-->
+<html><head><meta charset="utf-8"><title>Planning Poker</title></head><body></body></html>

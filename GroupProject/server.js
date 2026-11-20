@@ -5,6 +5,7 @@ const db = require("./db");
 
 const app = express();
 const fib = [0, 1, 2, 3, 5, 8, 13, 21, 40, 100];
+// TODO(Q1/API-9): Figma shows 9 vote cards, this list has 10 - decide, then serve one list to the client via GET /api/config
 // Return null, a valid Fibonacci number, or undefined
 function parseEffort(v) {
   if (v === null || v === undefined || v === "") return null;
@@ -19,6 +20,8 @@ app.use(express.static(path.join(__dirname, "public"))); // absolute path: works
 
 // "Auth": project name is the only gate. Client sends x-project and x-user headers.
 // TODO: replace with real sessions/cookies + passwords/invite codes later.
+// TODO(LOBBY-10): also read an x-client id (per-tab) so two people with the same name do not collide
+// TODO(API-7): requireHost middleware (host = earliest-joined active participant; see docs/LOBBY_AND_GAME_FLOW.md) - advisory until real sessions exist
 function requireProject(req, res, next) {
   const key = db.keyOf(req.get("x-project"));
   const data = db.read();
@@ -71,6 +74,7 @@ app.get("/api/project", requireProject, (req, res) => {
     ...(revealed ? { votes } : {}),
   }));
 
+  // TODO(API-2): also return a session summary { status, host, currentTaskId } so board buttons can say "Join vote" vs "Revote"
   res.json({ ...project, tasks, online });
 });
 
@@ -140,6 +144,13 @@ app.patch("/api/tasks/:id", requireProject, (req, res) => {
   res.json(task);
 });
 
+// TODO(VOTE-1): new tasks start un-estimated; the add-task form will stop sending `effort` (keep accepting it for tests/back-compat)
+// TODO(API-3): POST /api/tasks/:id/vote {card}   - participants only, valid card, 409 once revealed
+// TODO(API-4): POST /api/room/reveal   (host, or auto when everyone voted)
+// TODO(API-5): POST /api/room/revote   (host) - clear votes, revealed=false, round++
+// TODO(API-6): POST /api/room/accept {value} (host) - sets task.effort (Q2: snap average to a card), advances to next task
+// TODO(LOBBY-2/6): POST /api/room/join, /leave, /start ; GET /api/room?since=n  (see rooms.js stub)
+// TODO(API-8): coffee break poll endpoints
 // delete function
 app.delete("/api/tasks/:id", requireProject, (req, res) => {
   const data = db.read();
@@ -168,6 +179,7 @@ app.post("/api/presence", requireProject, (req, res) => {
 });
 
 // TODO: decide if users who were ever seen (but offline) should still appear greyed out
+// TODO(LOBBY-8): POST /api/room/leave for sendBeacon; TODO(RT-5): presence rewrites data.json every 10s per user - consider memory
 
 // ---- Effort summary ----
 // GET /api/project/effort -> [{ user, totalEffort, taskCount, doneEffort }] summed over tasks by assignee

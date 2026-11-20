@@ -23,3 +23,11 @@ Search the code for `TODO` to find what's left to build.
 - Presence bar: everyone currently at the board, shown at the top
 - User stories field, shown when a task is clicked
 - Done status + completed-tasks bar (with reopen)
+
+## Roadmap: Figma UI, Join vote/Revote button, waiting room
+Planned, not built. Start with **[/TODO.md](../TODO.md)** (checklist + open decisions).
+- `../design/FRAME_MAP.md` - each Figma frame -> page/component
+- `../docs/LOBBY_AND_GAME_FLOW.md` - waiting room rules, host logic, API + data model sketch
+- `public/images/figma/` - exported screens and components (PNG + SVG)
+- Stubs (comments only): `public/lobby.html`, `public/game.html`, `public/tutorial.html`, `public/css/app.css`, `public/js/shell.js`, `rooms.js`
+- Code comments use `TODO(ID)`; the ID matches an item in `TODO.md`

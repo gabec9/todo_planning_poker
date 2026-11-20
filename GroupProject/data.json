@@ -12,7 +12,9 @@
           "effort": 3,
           "userStories": "As a team member, I can log in with just a project name so I can reach the board quickly.",
           "status": "done",
-          "completedAt": "2026-10-20T15:12:00Z"
+          "completedAt": "2026-10-20T15:12:00Z",
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "cs02",
@@ -22,7 +24,9 @@
           "effort": 5,
           "userStories": "As a team member, I can see everyone's tasks and filter by assigned/unassigned so I know what's open.",
           "status": "todo",
-          "completedAt": null
+          "completedAt": null,
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "cs03",
@@ -32,7 +36,9 @@
           "effort": 5,
           "userStories": "As a team member, I can upload and read group notes so the whole team shares the same context.",
           "status": "todo",
-          "completedAt": null
+          "completedAt": null,
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "cs04",
@@ -42,7 +48,9 @@
           "effort": 8,
           "userStories": "As a participant, I can pick an effort card privately and reveal all cards together so estimates aren't biased.",
           "status": "todo",
-          "completedAt": null
+          "completedAt": null,
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "cs05",
@@ -52,7 +60,9 @@
           "effort": 2,
           "userStories": "As a new teammate, I can follow the README to run the app locally in under five minutes.",
           "status": "done",
-          "completedAt": "2026-10-21T18:40:00Z"
+          "completedAt": "2026-10-21T18:40:00Z",
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "cs06",
@@ -62,7 +72,9 @@
           "effort": null,
           "userStories": "As a user, my task edits are not silently overwritten when someone else edits at the same time.",
           "status": "todo",
-          "completedAt": null
+          "completedAt": null,
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "mwibyh7z",
@@ -79,7 +91,7 @@
       ],
       "users": {
         "Jared": {
-          "lastSeen": "2026-10-23T04:00:00Z"
+          "lastSeen": "2026-11-20T20:22:30.228Z"
         },
         "Maya": {
           "lastSeen": "2026-10-23T03:45:00Z"
@@ -104,7 +116,9 @@
           "effort": 3,
           "userStories": "As a designer, I have screenshots of every onboarding step so we can count taps.",
           "status": "done",
-          "completedAt": "2026-10-19T14:05:00Z"
+          "completedAt": "2026-10-19T14:05:00Z",
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "ap02",
@@ -114,7 +128,9 @@
           "effort": 2,
           "userStories": "As a user with low vision, I can read all text because the palette passes WCAG AA contrast.",
           "status": "todo",
-          "completedAt": null
+          "completedAt": null,
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "ap03",
@@ -124,7 +140,9 @@
           "effort": 5,
           "userStories": "As a user, I can find and change my notification settings in two taps.",
           "status": "todo",
-          "completedAt": null
+          "completedAt": null,
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "ap04",
@@ -134,7 +152,9 @@
           "effort": null,
           "userStories": "As a researcher, I have a short script so every interview covers the same questions.",
           "status": "todo",
-          "completedAt": null
+          "completedAt": null,
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "ap05",
@@ -144,7 +164,9 @@
           "effort": 1,
           "userStories": "As a researcher, I have five interviews booked so we get feedback before the design review.",
           "status": "todo",
-          "completedAt": null
+          "completedAt": null,
+          "votes": {},
+          "revealed": false
         }
       ],
       "users": {
@@ -168,7 +190,9 @@
           "effort": 1,
           "userStories": "As a club member, I can suggest a restaurant and note my dietary needs.",
           "status": "done",
-          "completedAt": "2026-10-22T12:30:00Z"
+          "completedAt": "2026-10-22T12:30:00Z",
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "lc02",
@@ -178,7 +202,9 @@
           "effort": 2,
           "userStories": "As the organizer, I have a reservation for 6 so we are not turned away.",
           "status": "todo",
-          "completedAt": null
+          "completedAt": null,
+          "votes": {},
+          "revealed": false
         },
         {
           "id": "lc03",
@@ -188,7 +214,9 @@
           "effort": null,
           "userStories": "As a club member, I can see what I owe after lunch without doing math.",
           "status": "todo",
-          "completedAt": null
+          "completedAt": null,
+          "votes": {},
+          "revealed": false
         }
       ],
       "users": {

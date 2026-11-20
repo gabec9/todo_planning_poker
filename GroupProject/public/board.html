@@ -20,6 +20,7 @@
   </style>
 </head>
 <body>
+  <!-- TODO(DS-7/UI-4/UI-5): restyle to Figma frame 10 Tasks Panel + shared header/footer; keep assign, filters, detail panel, notes, effort table -->
   <h1 id="title"></h1>
 
   <!-- done: PRESENCE BAR - row at the very top listing everyone currently at the board
@@ -31,6 +32,7 @@
   <input id="taskText" placeholder="New task">
   <input id="taskNote" placeholder="Task note">
   <!-- add inputs for user stories (textarea) and initial effort when creating a task -->
+  <!-- TODO(VOTE-1): remove this dropdown (and effortValue(newEffort.value) in addTask). Estimates now come from voting. -->
   <select id="newEffort" title="Initial effort"></select><br>
   <textarea id="newStories" rows="3" cols="60" placeholder="User stories (optional)"></textarea><br>
   <button onclick="addTask()">Add</button>
@@ -64,7 +66,7 @@
   <textarea id="note" rows="8" cols="60"></textarea><br>
   <button onclick="saveNote()">Save notes</button>
   <!-- done: edit task text/note (in the detail panel), delete button
-   TODO: poker estimate/vote UI (server has no vote endpoint yet) -->
+   TODO(VOTE-*): poker estimate/vote UI (server has no vote endpoint yet) -->
 
   <script src="api.js"></script>
   <script>
@@ -114,6 +116,8 @@
         btn.textContent = t.assignee === me ? "Release" : "Take";
         btn.onclick = () => update(t.id, { assignee: t.assignee === me ? null : me });
         li.append(" ", btn);
+        // TODO(VOTE-2/4): replace this <select> with a button: "Join vote" when t.effort == null, "Revote" when it has an estimate.
+        //   Click -> lobby.html if no game is running, else game.html?task=<id>. Show the estimate as plain text next to it. Revote = host only.
         // effort control (Fibonacci options)
         const eff = document.createElement("select");
         eff.innerHTML = effortOptions(t.effort);
@@ -197,6 +201,7 @@
         <p>User stories:<br><textarea id="dStories" rows="8" style="width:100%;box-sizing:border-box">${esc(t.userStories)}</textarea></p>
         <p><button id="dSave">Save</button></p>
         <p>Assignee: <b>${esc(t.assignee || "unassigned")}</b></p>
+        <!-- TODO(VOTE-3): replace this dropdown with read-only effort text + the same Join vote / Revote button -->
         <p>Effort: <select id="dEffort">${effortOptions(t.effort)}</select></p>
         <p>Status: <b>${isDone ? "Done" : "To do"}</b>
           <button id="dDone"${!isDone && missing ? ` disabled title="${esc(missing)}"` : ""}>${isDone ? "Reopen" : "Done"}</button></p>`;
@@ -268,6 +273,7 @@
     api("/api/presence", "POST").catch(() => {}); // announce immediately
     setInterval(() => api("/api/presence", "POST").catch(() => {}), 10000);
     // done: setInterval(load, 5000) or SSE so everyone's view stays in sync
+    // TODO(VOTE-11/RT-1): this loop pauses while an input/select is focused - fine for the board, NOT for voting (game.html gets its own loop)
     // keep everyone's view in sync (and refresh the online list), but don't interrupt typing
     setInterval(() => {
       const tag = document.activeElement && document.activeElement.tagName;

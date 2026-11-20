@@ -13,3 +13,4 @@ async function api(path, method = "GET", body) {
   if (!res.ok) throw new Error(data.error || "Request failed");
   return data;
 }
+// TODO(RT-1): add pollRoom(sinceVersion) helper for lobby/game pages (1s loop, include x-client once LOBBY-10 lands)
