@@ -1,14 +1,18 @@
-// TODO (schema v2) - new fields to add; old data.json files must still load, so default them in read():
-//   task.effort       number|null      e.g. Fibonacci value 1,2,3,5,8,13 (the agreed/final estimate)
-//   task.userStories  string           user stories text, shown when a task is clicked
-//   task.status       "todo"|"done"    replaces assigned/unassigned-only model; "done" feeds the completed bar
-//   task.completedAt  ISO string|null  set when status becomes "done"
-//   project.users     { "<name>": { lastSeen: ISO string } }   who is currently at the board (presence)
-//   TODO: in read(), backfill missing fields: effort=null, userStories="", status="todo", completedAt=null, project.users={}
-//
-// JSON-file "database". Shape (v1, current):
-// { "projects": { "<lowercased name>": { "name": "...", "note": "...",
-//     "tasks": [ { "id": "", "task": "", "note": "", "assignee": null } ] } } }
+// JSON-file "database". Shape (v2, current):
+// { "projects": { "<lowercased name>": {
+//     "name": "...", "note": "...",
+//     "users": { "<name>": { "lastSeen": "ISO string" } },
+//     "tasks": [ {
+//       "id": "", "task": "", "note": "", "assignee": null,
+//       "effort": null,          // number|null, the agreed/final estimate
+//       "userStories": "",       // shown when a task is clicked
+//       "status": "todo",        // "todo" | "done"
+//       "completedAt": null,     // ISO string|null, set when status becomes "done"
+//       "votes": {},             // poker round: { "<user>": card }
+//       "revealed": false        // true once cards are flipped
+//     } ]
+// } } }
+// Old data.json files still load: read() backfills any missing v2 fields.
 const fs = require("fs");
 const FILE = require("path").join(__dirname, "data.json");
 
@@ -16,11 +20,29 @@ const keyOf = (name) => (name || "").trim().toLowerCase(); // case-insensitive p
 
 function read() {
   if (!fs.existsSync(FILE)) fs.writeFileSync(FILE, JSON.stringify({ projects: {} }, null, 2));
-  return JSON.parse(fs.readFileSync(FILE, "utf8"));
+  const data = JSON.parse(fs.readFileSync(FILE, "utf8"));
+
+  // Backfill: ??= only fills fields that are null/undefined, so existing values are kept.
+  data.projects ??= {};
+  for (const p of Object.values(data.projects)) {
+    p.note ??= "";
+    p.users ??= {};
+    p.tasks ??= [];
+    for (const t of p.tasks) {
+      t.assignee ??= null;
+      t.effort ??= null;
+      t.userStories ??= "";
+      t.status ??= "todo";
+      t.completedAt ??= null;
+      t.votes ??= {};
+      t.revealed ??= false;
+    }
+  }
+  return data;
 }
 
 function write(data) {
   fs.writeFileSync(FILE, JSON.stringify(data, null, 2));
-  }
+}
 
 module.exports = { read, write, keyOf };
