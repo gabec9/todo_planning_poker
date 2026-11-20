@@ -4,7 +4,7 @@
 <body>
   <h1 id="title"></h1>
 
-  <!-- TODO: PRESENCE BAR - row at the very top listing everyone currently at the board
+  <!-- done: PRESENCE BAR - row at the very top listing everyone currently at the board
        (name chips, highlight "you"). Fill from the online-users list returned by the server. -->
   <div id="presence"></div>
   <p>Signed in as <b id="who"></b> | <a href="login.html" onclick="sessionStorage.clear()">Log out</a></p>
@@ -12,7 +12,9 @@
   <!-- Add task -->
   <input id="taskText" placeholder="New task">
   <input id="taskNote" placeholder="Task note">
-  <!-- TODO: add inputs for user stories (textarea) and initial effort when creating a task -->
+  <!-- add inputs for user stories (textarea) and initial effort when creating a task -->
+  <select id="newEffort" title="Initial effort"></select><br>
+  <textarea id="newStories" rows="3" cols="60" placeholder="User stories (optional)"></textarea><br>
   <button onclick="addTask()">Add</button>
 
   <!-- Filter: all tasks / unassigned / assigned -->
@@ -26,43 +28,54 @@
     </select>
   </p>
 
-  <!-- TODO: COMPLETED BAR - collapsible strip/section for tasks with status "done" (title, assignee, effort, completedAt),
-       with a "Reopen" button on each. Tasks that are done should disappear from the main list below.
-       <div id="completed"></div> -->
-
+  <!-- COMPLETED BAR - collapsible strip/section for tasks with status "done" (title, assignee, effort, completedAt),
+       with a "Reopen" button on each. Tasks that are done should disappear from the main list below. -->
+    <details id="completed"></details> 
   <ul id="tasks"></ul>
 
-  <!-- TODO: TASK DETAIL PANEL - clicking a task opens this (modal or side panel) showing:
-       task text, note, USER STORIES (editable textarea + save), assignee, effort, Done/Reopen button.
-       <div id="detail" hidden></div> -->
+  <!-- TASK DETAIL PANEL - clicking a task opens this (modal or side panel) showing:
+       task text, note, USER STORIES (editable textarea + save), assignee, effort, Done/Reopen button.-->
+    <div id="detail" hidden
+     style="position:fixed;top:0;right:0;width:340px;max-width:100%;height:100%;overflow:auto;box-sizing:border-box;padding:12px;background:#fff;border-left:1px solid #888;box-shadow:-4px 0 12px rgba(0,0,0,.15)"></div>
 
-  <!-- TODO: EFFORT TABLE - shown only when filter === "all" ("Everyone's tasks").
-       Columns: Person | # tasks | Total effort | Done effort. One row per person plus "Unassigned", and a totals row.
-       <table id="effortTable"></table> -->
+  <!-- done: EFFORT TABLE - shown only when filter === "all" ("Everyone's tasks").
+       Columns: Person | # tasks | Total effort | Done effort. One row per person plus "Unassigned", and a totals row.-->
+    <table id="effortTable" border="1" cellpadding="4" style="border-collapse:collapse;margin:10px 0" hidden></table>
 
   <h2>Group notes</h2>
   <textarea id="note" rows="8" cols="60"></textarea><br>
   <button onclick="saveNote()">Save notes</button>
-  <!-- TODO: file upload input + list of uploaded notes -->
+  <!-- done: edit task text/note (in the detail panel), delete button
+   TODO: poker estimate/vote UI (server has no vote endpoint yet) -->
 
   <script src="api.js"></script>
   <script>
-    let project = null;
+    let project = null; 
+    let detailId = null;   // task currently open in the detail panel
     const me = sessionStorage.getItem("user");
     if (!sessionStorage.getItem("project")) location.href = "login.html";
     who.textContent = me;
+    // Allowed effort values (must match the server's list)
+    const FIB = [0, 1, 2, 3, 5, 8, 13, 21, 40, 100];
+    function effortOptions(value) {
+      return `<option value="">Effort...</option>` +
+        FIB.map(n => `<option value="${n}"${value === n ? " selected" : ""}>${n}</option>`).join("");
+    }
+    const effortValue = (v) => v === "" ? null : Number(v);   // "" -> null, else number
+    newEffort.innerHTML = effortOptions(null);
 
     async function load() {
       project = await api("/api/project");
       title.textContent = project.name;
-      note.value = project.note;
+      if (document.activeElement !== note) note.value = project.note;   // don't overwrite notes while typing
       render();
     }
 
     function render() {
       renderPresence();
       const f = filter.value;
-      const shown = project.tasks.filter(t =>
+      const open = project.tasks.filter(t => t.status !== "done");
+      const shown = open.filter(t =>
         f === "all" ? true :
         f === "unassigned" ? !t.assignee :
         f === "assigned" ? !!t.assignee :
@@ -73,18 +86,44 @@
         const li = document.createElement("li");
         li.innerHTML = `<b>${esc(t.task)}</b> - ${esc(t.note)}
           [${t.assignee ? "assigned to " + esc(t.assignee) : "unassigned"}]`;
+        // make the task title clickable -> openDetail(t.id) to show user stories
+        const titleEl = li.querySelector("b");
+        titleEl.style.cursor = "pointer";
+        titleEl.style.textDecoration = "underline";
+        titleEl.onclick = () => openDetail(t.id);
         // Claim / release
         const btn = document.createElement("button");
         btn.textContent = t.assignee === me ? "Release" : "Take";
         btn.onclick = () => update(t.id, { assignee: t.assignee === me ? null : me });
         li.append(" ", btn);
-        // TODO: make the task title clickable -> openDetail(t.id) to show user stories
-        // TODO: EFFORT control - <select>/input next to each task (Fibonacci options) -> update(t.id, { effort })
-        // TODO: DONE button next to Take/Release -> update(t.id, { status: "done" }); hide/disable if effort or assignee missing?
-        // TODO: skip tasks with status "done" here and render them into the completed bar instead
+        // effort control (Fibonacci options)
+        const eff = document.createElement("select");
+        eff.innerHTML = effortOptions(t.effort);
+        eff.onchange = () => update(t.id, { effort: effortValue(eff.value) });
+        li.append(" ", eff);
+        // done button - disabled until the task has an assignee and an effort
+        const doneBtn = document.createElement("button");
+        doneBtn.textContent = "Done";
+        const missing = !t.assignee ? "Assign this task first" : t.effort == null ? "Set an effort first" : "";
+        doneBtn.disabled = !!missing;
+        doneBtn.title = missing;
+        doneBtn.onclick = () => update(t.id, { status: "done" });
+        li.append(" ", doneBtn);
+        // delete button
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.onclick = () => deleteTask(t.id);
+        li.append(" ", del);
+        // done: make the task title clickable -> openDetail(t.id) to show user stories
+        // done: EFFORT control - <select>/input next to each task (Fibonacci options) -> update(t.id, { effort })
+        // done: DONE button next to Take/Release -> update(t.id, { status: "done" }); hide/disable if effort or assignee missing?
+        // done: skip tasks with status "done" here and render them into the completed bar instead
         // TODO: edit task text/note inline, delete button, poker estimate/vote UI
         tasks.append(li);
       }
+      renderCompleted();
+      renderEffortTable();
+      renderDetail();
     }
 
     // function renderPresence()  - fill #presence from the online users list
@@ -93,26 +132,130 @@
       .map(n => `<span style="padding:2px 8px;border:1px solid #888;border-radius:12px;${n === me ? "font-weight:bold;background:#e8f0fe" : ""}">${esc(n)}${n === me ? " (you)" : ""}</span>`)
       .join(" ");
     }
-    // TODO: function renderCompleted() - fill #completed from tasks where status === "done"
-    // TODO: function openDetail(id)    - show #detail with user stories; save via update(id, { userStories })
-    // TODO: function renderEffortTable() - group tasks by assignee, sum effort, fill #effortTable (only when filter === "all")
-    // TODO: call the four renderers above from render()
-    // TODO: heartbeat - setInterval(() => api("/api/presence", "POST"), 10000) and refresh the online list when load() runs
+    // done: function renderCompleted() - fill #completed from tasks where status === "done"
+    function renderCompleted() {
+      const done = project.tasks
+        .filter(t => t.status === "done")
+        .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+      const wasOpen = completed.open;   // keep it expanded/collapsed across refreshes
+      completed.innerHTML = `<summary><b>Completed (${done.length})</b></summary>`;
+      if (!done.length) completed.insertAdjacentHTML("beforeend", "<p>Nothing completed yet.</p>");
+      for (const t of done) {
+        const row = document.createElement("div");
+        const when = t.completedAt ? new Date(t.completedAt).toLocaleString() : "";
+        row.innerHTML = `<b>${esc(t.task)}</b> - ${esc(t.assignee || "unassigned")} | effort ${t.effort ?? "-"} | completed ${esc(when)} `;
+        const titleEl = row.querySelector("b");
+        titleEl.style.cursor = "pointer";
+        titleEl.style.textDecoration = "underline";
+        titleEl.onclick = () => openDetail(t.id);
+        const reopen = document.createElement("button");
+        reopen.textContent = "Reopen";
+        reopen.onclick = () => update(t.id, { status: "todo" });
+        row.append(reopen);
+        completed.append(row);
+      }
+      completed.open = wasOpen;
+    }
+    // done: function openDetail(id)    - show #detail with user stories; save via update(id, { userStories })
+    // show #detail for a task: text, note, user stories (editable + save), assignee, effort, Done/Reopen
+    function openDetail(id) { detailId = id; renderDetail(true); }
+    function closeDetail() { detailId = null; detail.hidden = true; }
+    function renderDetail(force) {
+      if (!detailId) { detail.hidden = true; return; }
+      const t = project.tasks.find(x => x.id === detailId);
+      if (!t) { closeDetail(); return; }
+      // don't redraw while the user is typing in the panel
+      const a = document.activeElement;
+      if (!force && detail.contains(a) && (a.tagName === "INPUT" || a.tagName === "TEXTAREA")) return;
+
+      const isDone = t.status === "done";
+      const missing = !t.assignee ? "Assign this task first" : t.effort == null ? "Set an effort first" : "";
+      detail.hidden = false;
+      detail.innerHTML = `
+        <button id="dClose" style="float:right">Close</button>
+        <h3>Task details</h3>
+        <p>Task:<br><input id="dText" style="width:100%;box-sizing:border-box" value="${esc(t.task)}"></p>
+        <p>Note:<br><input id="dNote" style="width:100%;box-sizing:border-box" value="${esc(t.note)}"></p>
+        <p>User stories:<br><textarea id="dStories" rows="8" style="width:100%;box-sizing:border-box">${esc(t.userStories)}</textarea></p>
+        <p><button id="dSave">Save</button></p>
+        <p>Assignee: <b>${esc(t.assignee || "unassigned")}</b></p>
+        <p>Effort: <select id="dEffort">${effortOptions(t.effort)}</select></p>
+        <p>Status: <b>${isDone ? "Done" : "To do"}</b>
+          <button id="dDone"${!isDone && missing ? ` disabled title="${esc(missing)}"` : ""}>${isDone ? "Reopen" : "Done"}</button></p>`;
+
+      // Current values of the editable fields (so nothing typed is lost when another control is used)
+      const fields = () => ({
+        task: dText.value, note: dNote.value, userStories: dStories.value,
+      });
+      dClose.onclick = closeDetail;
+      dSave.onclick = () => update(t.id, fields());
+      dEffort.onchange = () => update(t.id, { ...fields(), effort: effortValue(dEffort.value) });
+      dDone.onclick = () => update(t.id, { ...fields(), status: isDone ? "todo" : "done" });
+    }
+
+    // done: function renderEffortTable() - group tasks by assignee, sum effort, fill #effortTable (only when filter === "all")
+    // Group ALL tasks by assignee and sum effort (only shown when filter === "all")
+    function renderEffortTable() {
+      if (filter.value !== "all") { effortTable.hidden = true; return; }
+      const rows = {};
+      const row = (name) => (rows[name] ??= { name, count: 0, total: 0, done: 0 });
+      for (const n of Object.keys(project.users || {})) row(n);   // everyone who has been at the board
+      for (const n of project.online) row(n);
+      row("Unassigned");
+      for (const t of project.tasks) {
+        const r = row(t.assignee || "Unassigned");
+        r.count++;
+        r.total += t.effort ?? 0;
+        if (t.status === "done") r.done += t.effort ?? 0;
+      }
+      const list = Object.values(rows).sort((a, b) =>
+        a.name === "Unassigned" ? 1 : b.name === "Unassigned" ? -1 : a.name.localeCompare(b.name));
+      const sum = (k) => list.reduce((s, r) => s + r[k], 0);
+      effortTable.hidden = false;
+      effortTable.innerHTML =
+        `<tr><th>Person</th><th># tasks</th><th>Total effort</th><th>Done effort</th></tr>` +
+        list.map(r => `<tr><td>${esc(r.name)}${r.name === me ? " (you)" : ""}</td><td>${r.count}</td><td>${r.total}</td><td>${r.done}</td></tr>`).join("") +
+        `<tr><th>Total</th><th>${sum("count")}</th><th>${sum("total")}</th><th>${sum("done")}</th></tr>`;
+    }
+    // done: call the four renderers above from render()
+    // done: heartbeat - setInterval(() => api("/api/presence", "POST"), 10000) and refresh the online list when load() runs
 
     const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
     async function addTask() {
-      await api("/api/tasks", "POST", { task: taskText.value, note: taskNote.value });
-      taskText.value = taskNote.value = "";
+      try {
+       await api("/api/tasks", "POST", {
+        task: taskText.value, note: taskNote.value,
+        userStories: newStories.value, effort: effortValue(newEffort.value),
+      });
+      taskText.value = taskNote.value = newStories.value = "";
+      newEffort.value = "";
+    } catch (e) { alert(e.message); }
       load();
     }
-    async function update(id, fields) { await api("/api/tasks/" + id, "PATCH", fields); load(); }
+    async function update(id, fields) {
+      try { await api("/api/tasks/" + id, "PATCH", fields); }
+      catch (e) { alert(e.message); }   // e.g. "Assign the task before marking it done"
+      load();
+    }
+    async function deleteTask(id) {
+      if (!confirm("Delete this task?")) return;
+      try { await api("/api/tasks/" + id, "DELETE"); } catch (e) { alert(e.message); }
+      if (detailId === id) closeDetail();
+      load();
+    }
     async function saveNote() { await api("/api/project/note", "PUT", { note: note.value }); }
 
     load();
     api("/api/presence", "POST").catch(() => {}); // announce immediately
     setInterval(() => api("/api/presence", "POST").catch(() => {}), 10000);
-    // TODO: setInterval(load, 5000) or SSE so everyone's view stays in sync
+    // done: setInterval(load, 5000) or SSE so everyone's view stays in sync
+    // keep everyone's view in sync (and refresh the online list), but don't interrupt typing
+    setInterval(() => {
+      const tag = document.activeElement && document.activeElement.tagName;
+      if (tag !== "INPUT" && tag !== "TEXTAREA" && tag !== "SELECT") load().catch(() => {});
+    }, 5000);
+
   </script>
 </body>
 </html>

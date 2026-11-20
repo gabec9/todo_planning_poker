@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="TodoApiTest" time="1.337" tests="15" errors="0" skipped="6" failures="0">
+  <properties>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/home/anshoo/Desktop/ClassWork/CS555/GroupProject2/todo_planning_poker/GroupProject/tests/target/test-classes:/home/anshoo/Desktop/ClassWork/CS555/GroupProject2/todo_planning_poker/GroupProject/tests/target/classes:/home/anshoo/.m2/repository/org/junit/jupiter/junit-jupiter/5.11.4/junit-jupiter-5.11.4.jar:/home/anshoo/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.4/junit-jupiter-api-5.11.4.jar:/home/anshoo/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/anshoo/.m2/repository/org/junit/platform/junit-platform-commons/1.11.4/junit-platform-commons-1.11.4.jar:/home/anshoo/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/anshoo/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.4/junit-jupiter-params-5.11.4.jar:/home/anshoo/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.11.4/junit-jupiter-engine-5.11.4.jar:/home/anshoo/.m2/repository/org/junit/platform/junit-platform-engine/1.11.4/junit-platform-engine-1.11.4.jar:/home/anshoo/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.18.2/jackson-databind-2.18.2.jar:/home/anshoo/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.18.2/jackson-annotations-2.18.2.jar:/home/anshoo/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.18.2/jackson-core-2.18.2.jar:"/>
+    <property name="java.vm.vendor" value="Ubuntu"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://ubuntu.com/"/>
+    <property name="user.timezone" value="America/New_York"/>
+    <property name="os.name" value="Linux"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-21-openjdk-amd64/lib"/>
+    <property name="sun.java.command" value="/home/anshoo/Desktop/ClassWork/CS555/GroupProject2/todo_planning_poker/GroupProject/tests/target/surefire/surefirebooter-20261113134817831_3.jar /home/anshoo/Desktop/ClassWork/CS555/GroupProject2/todo_planning_poker/GroupProject/tests/target/surefire 2026-11-13T13-48-17_081-jvmRun1 surefire-20261113134817831_1tmp surefire_0-20261113134817831_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/home/anshoo/Desktop/ClassWork/CS555/GroupProject2/todo_planning_poker/GroupProject/tests/target/test-classes:/home/anshoo/Desktop/ClassWork/CS555/GroupProject2/todo_planning_poker/GroupProject/tests/target/classes:/home/anshoo/.m2/repository/org/junit/jupiter/junit-jupiter/5.11.4/junit-jupiter-5.11.4.jar:/home/anshoo/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.4/junit-jupiter-api-5.11.4.jar:/home/anshoo/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/anshoo/.m2/repository/org/junit/platform/junit-platform-commons/1.11.4/junit-platform-commons-1.11.4.jar:/home/anshoo/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/anshoo/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.4/junit-jupiter-params-5.11.4.jar:/home/anshoo/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.11.4/junit-jupiter-engine-5.11.4.jar:/home/anshoo/.m2/repository/org/junit/platform/junit-platform-engine/1.11.4/junit-platform-engine-1.11.4.jar:/home/anshoo/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.18.2/jackson-databind-2.18.2.jar:/home/anshoo/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.18.2/jackson-annotations-2.18.2.jar:/home/anshoo/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.18.2/jackson-core-2.18.2.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/anshoo"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-10-24"/>
+    <property name="java.home" value="/usr/lib/jvm/java-21-openjdk-amd64"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/home/anshoo/Desktop/ClassWork/CS555/GroupProject2/todo_planning_poker/GroupProject/tests"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="surefire.real.class.path" value="/home/anshoo/Desktop/ClassWork/CS555/GroupProject2/todo_planning_poker/GroupProject/tests/target/surefire/surefirebooter-20261113134817831_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="21.0.13.0.3+1-1-24.04.1-Ubuntu"/>
+    <property name="user.name" value="anshoo"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="6.8.0-147-generic"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="localRepository" value="/home/anshoo/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://bugs.launchpad.net/ubuntu/+source/openjdk-21"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="21.0.13.0.3"/>
+    <property name="user.dir" value="/home/anshoo/Desktop/ClassWork/CS555/GroupProject2/todo_planning_poker/GroupProject/tests"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="Ubuntu"/>
+    <property name="java.vm.version" value="21.0.13.0.3+1-1-24.04.1-Ubuntu"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="patchTask_markDone_setsCompletedAt" classname="TodoApiTest" time="0.0">
+    <skipped message="TODO: status=done should set completedAt"/>
+  </testcase>
+  <testcase name="createTask_hasSchemaV2Defaults" classname="TodoApiTest" time="0.0">
+    <skipped message="TODO: new tasks should default effort=null, userStories, status=todo, completedAt=null"/>
+  </testcase>
+  <testcase name="votes_areHiddenUntilRevealed" classname="TodoApiTest" time="0.262"/>
+  <testcase name="patchTask_acceptsFibonacciEffort" classname="TodoApiTest" time="0.0">
+    <skipped message="TODO: PATCH should accept effort"/>
+  </testcase>
+  <testcase name="deleteTask_unknownId_returns404" classname="TodoApiTest" time="0.112"/>
+  <testcase name="effortSummary_sumsEffortPerAssignee" classname="TodoApiTest" time="0.118"/>
+  <testcase name="presence_recordsLastSeen" classname="TodoApiTest" time="0.116"/>
+  <testcase name="effortSummary_skipsNullEffort_andPutsUnassignedLast" classname="TodoApiTest" time="0.115"/>
+  <testcase name="patchTask_acceptsUserStories" classname="TodoApiTest" time="0.0">
+    <skipped message="TODO: PATCH should accept userStories"/>
+  </testcase>
+  <testcase name="deleteTask_removesIt" classname="TodoApiTest" time="0.114"/>
+  <testcase name="online_listsRecentUsers_notStaleOnes_andAlwaysIncludesRequester" classname="TodoApiTest" time="0.116"/>
+  <testcase name="patchTask_rejectsNonFibonacciEffort" classname="TodoApiTest" time="0.0">
+    <skipped message="TODO: PATCH should reject invalid effort values"/>
+  </testcase>
+  <testcase name="presence_requiresUserName" classname="TodoApiTest" time="0.111"/>
+  <testcase name="patchTask_reopen_clearsCompletedAt" classname="TodoApiTest" time="0.0">
+    <skipped message="TODO: status=todo (reopen) should clear completedAt"/>
+  </testcase>
+  <testcase name="completed_returnsOnlyDoneTasks_newestFirst" classname="TodoApiTest" time="0.13"/>
+</testsuite>
